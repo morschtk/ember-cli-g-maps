@@ -140,6 +140,7 @@ export default Ember.Mixin.create({
   _syncHeatmapMarkers: function() {
     const mvcArray = this._heatmapMarkersMVCArray;
     const heatmapMarkers = this._toJSArray(this.heatmapMarkers || []);
+    let bounds = new google.maps.LatLngBounds();
 
     if(heatmapMarkers[0]) {
 
@@ -163,6 +164,7 @@ export default Ember.Mixin.create({
       if(!current || current.location.lat() !== lat || current.location.lng() !== lng) {
 
         marker.location = new google.maps.LatLng(lat, lng);
+        bounds.extend(marker.location);
 
         // Optional `weight` parameter
         if(hm.weight) { marker.weight = hm.weight; }
@@ -176,6 +178,7 @@ export default Ember.Mixin.create({
     while(mvcArray.length > heatmapMarkers.length) {
       mvcArray.pop();
     }
+    this.get('map').fitBounds(bounds);
   },
 
 
